@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alliance Weather</title>
+    <style>
+        *{
+            background-color: rgb(165, 189, 209);
+        }
+        #weatherInfo{
+            color:rgb(208, 81, 81);
+            padding-left: 170px;
+        }
+        #city{
+            color:rgb(34, 12, 12);
+        }
+        h1{
+            padding-left: 170px;
+            color:rgb(76, 21, 23);
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        }
+        #GetWeather{
+            color:rgb(56, 38, 38);
+           
+        }
+        body{
+            border:5px solid black;
+            border-top-left-radius: 15px;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            border-top-right-radius: 15px;
+            
+
+        }
+        #center{
+            padding-left: 140px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Alliance Weather</h1>
+    <div id="center">
+    <input type="text" id="City" placeholder="Enter city name">
+    <button id="GetWeather">Get Current Weather</button>
+</div>
+    <div id="weatherInfo">
+        <h2 id="cityName"></h2>
+        <p id="temp"></p>
+        <p id="humidity"></p>
+        <p id="wind"></p>
+    </div>
+
+    <script>
+        const apikey = "5f14cec2c4e9d5d37a91c948d12a0f29"; // Your API key
+        const searchInput = document.querySelector("#City");
+        const searchButton = document.querySelector("#GetWeather");
+
+        searchButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            getWeather(searchInput.value);
+        });
+
+        function getWeather(city) {
+            const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apikey}&units=metric`;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    showWeather(data);
+                })
+                .catch(error => {
+                    console.error("Error fetching weather data:", error);
+                    alert("Failed to retrieve weather information. Please try again.");
+                });
+        }
+
+        function showWeather(data) {
+            if (data.cod !== 200) {
+                alert("City not found. Please enter a valid city name.");
+                return;
+            }
+
+            document.getElementById("cityName").textContent = `Weather in ${data.name}`;
+            document.getElementById("temp").textContent = `Temperature: ${data.main.temp}°C`;
+            document.getElementById("humidity").textContent = `Humidity: ${data.main.humidity}%`;
+            document.getElementById("wind").textContent = `Wind Speed: ${data.wind.speed} m/s`;
+        }
+    </script>
+</body>
+</html>
